@@ -32,7 +32,9 @@ RUN pip install --no-cache-dir -r requirements-api.txt
 # Copia apenas o código necessário
 COPY src ./src
 
-# App Service injeta a porta em $PORT; usamos 8000 como padrão local.
-ENV PORT=8000
+# Escuta SEMPRE na porta 8000 (fixa). O Ingress do Container App deve usar
+# Target port = 8000. Nao dependemos da env var PORT (o Container Apps pode
+# injeta-la com outro valor e quebrar o bind, deixando a revisao presa em
+# "Ativando" por falha no health probe).
 EXPOSE 8000
-CMD ["sh", "-c", "uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
