@@ -1,0 +1,37 @@
+name: Build e push da imagem do endpoint SQL
+
+# Builda o Dockerfile e publica a imagem no Docker Hub a cada push na main.
+# O Azure Container Apps consome essa imagem (Docker.io).
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}   # permite rodar manualmente pela aba Actions
+
+env:
+  # Ajuste para o seu usuário do Docker Hub. O nome final da imagem fica:
+  #   docker.io/<DOCKERHUB_USER>/intelbras-sql-tool:latest
+  IMAGE_NAME: intelbras-sql-tool
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build e push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
