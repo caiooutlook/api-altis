@@ -1,0 +1,49 @@
+name: Trigger auto deployment for api-altis
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/api-altis-AutoDeployTrigger-7bee5a04-f2b6-42a4-982b-98db90e1746e.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.APIALTIS_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.APIALTIS_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.APIALTIS_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }}
+          _dockerfilePathKey_: _dockerfilePath_
+          _targetLabelKey_: _targetLabel_
+          registryUrl: resgitryintel.azurecr.io
+          registryUsername: ${{ secrets.APIALTIS_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.APIALTIS_REGISTRY_PASSWORD }}
+          containerAppName: api-altis
+          resourceGroup: TESTE_ALTIS
+          imageToBuild: resgitryintel.azurecr.io/api-altis:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
