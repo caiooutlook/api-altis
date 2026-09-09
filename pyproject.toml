@@ -1,0 +1,12 @@
+[project]
+name = "intelbras-chatbot-poc"
+version = "0.1.0"
+description = "POC de chatbot multi-agente para consulta de documentação e dados de vendas Intelbras"
+requires-python = ">=3.11"
+readme = "README.md"
+
+[project.scripts]
+intelbras-chat = "src.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]

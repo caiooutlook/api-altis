@@ -1,0 +1,21 @@
+# Nunca copiar segredos nem ambientes locais para a imagem
+.env
+.venv/
+venv/
+
+# Artefatos e dados locais
+data/
+lib/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Docs e coisas que o endpoint não precisa
+docs/
+knowledge/
+scripts/
+.git/
+.gitignore
+.vscode/
+.idea/
+README.md

@@ -1,0 +1,7 @@
+# Dependências APENAS do endpoint da tool SQL (Estratégia A2).
+# O endpoint não gera SQL (quem gera é o agente), então não precisa de
+# LLM/RAG/orquestração — só servidor web + driver do banco.
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pyodbc>=5.1.0
+python-dotenv>=1.0.0

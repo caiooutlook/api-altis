@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# Environment
+.env
+
+# Data (generated)
+data/
+lib/
+
+# IDE
+.vscode/
+.idea/
+*.swp

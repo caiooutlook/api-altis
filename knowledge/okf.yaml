@@ -1,0 +1,8 @@
+# Open Knowledge Format (OKF) Bundle Manifest
+# Intelbras - Base de Conhecimento de Produtos
+name: intelbras-produtos
+version: "0.1.0"
+description: "Base de conhecimento técnica dos produtos Intelbras para consulta por agentes de IA"
+producer: "intelbras/knowledge-team"
+language: pt-BR
+license: proprietary
