@@ -95,6 +95,12 @@ class SQLAgent:
         """Obtém conexão com o banco SQL Server."""
         if self._conn is None:
             self._conn = pyodbc.connect(SQLSERVER_CONN_STR, autocommit=True)
+            # Garante que textos (VARCHAR/NVARCHAR) sejam lidos/escritos como UTF-8.
+            # Sem isso, no Linux o driver ODBC devolve acentos errados
+            # (ex.: "São Paulo" vira "SÃ£o Paulo").
+            self._conn.setdecoding(pyodbc.SQL_CHAR, encoding="utf-8")
+            self._conn.setdecoding(pyodbc.SQL_WCHAR, encoding="utf-8")
+            self._conn.setencoding(encoding="utf-8")
         return self._conn
 
     def close(self):

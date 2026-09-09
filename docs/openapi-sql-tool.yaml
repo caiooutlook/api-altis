@@ -1,0 +1,48 @@
+openapi: 3.0.1
+info:
+  title: Intelbras SQL Tool
+  description: Executa uma consulta SELECT no banco operacional da Intelbras.
+  version: "2.0"
+servers:
+  - url: https://api-altis.proudmoss-fcd13e11.eastus.azurecontainerapps.io
+paths:
+  /executar-sql:
+    post:
+      operationId: executar_sql
+      description: >-
+        Executa uma consulta SQL (SOMENTE SELECT, em T-SQL do SQL Server) no banco
+        operacional da Intelbras e retorna as linhas. Use quando a pergunta pedir
+        NÚMEROS ou fatos de negócio (vendas, faturamento, estoque, disponibilidade,
+        lojas, funcionários, preços, quantidades). Você deve GERAR o SQL a partir do
+        schema fornecido nas suas instruções. NÃO use para dúvidas técnicas de
+        produto (essas vão para a base de conhecimento/documentação).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sql:
+                  type: string
+                  description: >-
+                    Comando SELECT em T-SQL (SQL Server). Use TOP N em vez de LIMIT.
+                    Datas no formato 'YYYY-MM-DD'. Apenas leitura.
+              required: [sql]
+      responses:
+        "200":
+          description: Resultado da consulta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  colunas:  { type: array, items: { type: string } }
+                  linhas:   { type: array, items: { type: array, items: { type: string } } }
+                  resumo:   { type: string }
+                  truncado: { type: boolean }
+                  erro:     { type: string, nullable: true }
+        "400":
+          description: SQL não permitido (apenas SELECT é aceito)
+        "401":
+          description: API key inválida (header x-api-key)
